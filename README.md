@@ -1,17 +1,15 @@
-# Docker Machine VMware Driver
+# Docker Machine VMware Driver for Windows 7 and above
 
-Create Docker machines locally on VMware [Fusion](https://www.vmware.com/products/fusion)
-and [Workstation](https://www.vmware.com/products/workstation).
+Create Docker machines locally on ~~VMware [Fusion](https://www.vmware.com/products/fusion)
+and~~ [Workstation](https://www.vmware.com/products/workstation).
 
-This driver requires VMware Workstation 14 (Windows/Linux) or VMware Fusion 10 (MacOS)
-to be installed on your host. Earlier versions of Workstation/Fusion might still work
+This driver requires VMware Workstation 15 Windows ~~or VMware Fusion 11 (MacOS)~~ to be installed on your host. Earlier versions of Workstation/Fusion might still work
 with this driver, but it's not officially supported.
 
 >
 > Docker machine has a builtin driver called `vmwarefusion`. The main difference between
 > those drivers is that `vmware` also works on VMware Workstation, while `vmwarefusion` only
 > works on VMware Fusion.
->
 
 
 ## Installation
@@ -25,7 +23,7 @@ Download the the binary that corresponds to your OS into a directory residing in
 ### From Source
 
 Make sure you have installed [Go](http://www.golang.org) and configured [GOPATH](http://golang.org/doc/code.html#GOPATH)
-properly. For MacOS and Linux, make sure `$GOPATH/bin` is part of your `$PATH` for MacOS and Linux.
+properly. ~~For MacOS and Linux, make sure `$GOPATH/bin` is part of your `$PATH` for MacOS and Linux.~~
 For Windows, make sure `%GOPATH%\bin` is included in `%PATH%`.
 
 Run the following command:
@@ -52,6 +50,11 @@ $ docker-machine create --driver=vmware default
 - `--vmware-no-share`: Disable the mount of your home directory
 - `--vmware-ssh-password`: SSH password
 - `--vmware-ssh-user`: SSH user
+- `--vmware-share-path`: VMware Share Path
+- `--vmware-share-name`: VMware Share Name (keep default 'Users' when migration)
+- `--vmware-bt2d-data-storage`: vmdk Path for bt2d data storage
+- `--ssh-port`: SSH port
+- `--dockerd-port`: dockerd port
 
 #### Environment variables and default values
 
@@ -65,8 +68,13 @@ $ docker-machine create --driver=vmware default
 | `--vmware-no-share`        | VMWARE_NO_SHARE        | -                        |
 | `--vmware-ssh-password`    | VMWARE_SSH_PASSWORD    | `tcuser`                 |
 | `--vmware-ssh-user`        | VMWARE_SSH_USER        | `docker`                 |
+| `--ssh-port`        | SSH_PORT        | `22`                 |
+| `--dockerd-port`        | DOCKERD_PORT        | `2376`                 |
+| `--vmware-share-path`        | VMWARE_SHARE_PATH        | `C:\docker\`                 |
+| `--vmware-share-name`        | VMWARE_SHARE_NAME        | `Users`                 |
+| `--vmware-bt2d-data-storag`        | VMWARE_BT2DDATASTORAGE        | -                 |
 
 
 ## License
 
-It's under the Apache 2 license.
+See license file [LGPL V3 LICENSE](https://github.com/AZ-X/docker-machine-driver-vmware/blob/master/LICENSE "LICENSE").

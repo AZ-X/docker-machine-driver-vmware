@@ -4,8 +4,8 @@ os:
   - osx
 
 go:
-  - 1.9.x
-  - '1.9.4'
+  - 1.14.x
+  - '1.14.2'
 go_import_path: github.com/machine-drivers/docker-machine-driver-vmware
 
 install:
@@ -20,4 +20,4 @@ deploy:
   on:
     tags: true
     condition: $TRAVIS_OS_NAME = linux
-    go: '1.9.4'
+    go: '1.14.2'

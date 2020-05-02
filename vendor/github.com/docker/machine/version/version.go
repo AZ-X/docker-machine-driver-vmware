@@ -1,4 +1,4 @@
-package version
+﻿package version
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 var (
-	Version = "dev"
+	Version = "A.Z special use ©perpetual.grace.ltd😡"
 
 	// GitCommit will be overwritten automatically by the build system
 	GitCommit = "HEAD"

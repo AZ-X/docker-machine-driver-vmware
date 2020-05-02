@@ -19,39 +19,83 @@ package vmware
 import (
 	"path/filepath"
 	"strings"
-
+	
+	"github.com/docker/machine/libmachine/log"
+	"github.com/machine-drivers/docker-machine-driver-vmware/pkg/drivers/vmware/config"
 	"golang.org/x/sys/windows/registry"
 )
 
-var windowsInstallDir = `C:\Program Files (x86)\VMware\VMware Workstation`
+//var windowsInstallDir = `C:\Program Files (x86)\VMware\VMware Workstation`
+//var dhcpConfFileDir = `C:\ProgramData\VMware\vmnetdhcp.conf`
+//var leaseFileDir = `C:\ProgramData\VMware\vmnetdhcp.leases`
 
-func init() {
+var windowsInstallDir, dhcpConfFileDir, leaseFileDir = getDirs()
+
+func getDirs()(val1 string, val2 string, val3 string) {
 	// Parse HKEY_.CLASSES_ROOT\vm\shell\open\command's value like:
 	// "C:\Program Files (x86)\VMware\VMware Workstation\vmware.exe" "%1"
 	// in order to the Workstation install dir.
+	
+	_windowsInstallDir := ""
+	_dhcpConfFileDir := ""
+	_leaseFileDir := ""
 	key, err := registry.OpenKey(registry.CLASSES_ROOT, `vm\shell\open\command`, registry.QUERY_VALUE)
 	if err != nil {
-		return
+		log.Errorf(">>>>>>ERROR: %s", err)
+		//return
 	}
 	defer key.Close()
 
 	value, _, err := key.GetStringValue("")
 	if err != nil {
-		return
+		log.Errorf(">>>>>>ERROR: %s", err)
+		//return
+	}else {
+		//log.Info(">>>>>>VMWARE REGISTRY INFO: " + value)
 	}
+	
 
 	if value[0] == '"' {
 		values := strings.Split(value[1:], "\"")
-		windowsInstallDir = filepath.Dir(values[0])
+		_windowsInstallDir = filepath.Dir(values[0])
+	}else {
+		log.Error(">>>>>>VMWARE REGISTRY ERROR: FIRST QUOTES NOT FOUND")
 	}
+	
+	
+	key2, err := registry.OpenKey(registry.LOCAL_MACHINE, `SYSTEM\CurrentControlSet\services\VMnetDHCP\Parameters`, registry.QUERY_VALUE)
+	if err != nil {
+		log.Errorf(">>>>>>ERROR: %s", err)
+		//return
+	}
+	defer key2.Close()
+
+	value2, _, err := key2.GetStringValue("ConfFile")
+	if err != nil {
+		log.Errorf(">>>>>>ERROR: %s", err)
+		//return
+	}else {
+		//log.Info(">>>>>>VMWARE REGISTRY INFO: " + value2)
+		_dhcpConfFileDir = value2;
+	}
+	
+	value3, _, err := key2.GetStringValue("LeaseFile")
+	if err != nil {
+		log.Errorf(">>>>>>ERROR: %s", err)
+		//return
+	}else {
+		//log.Info(">>>>>>VMWARE REGISTRY INFO: " + value3)
+		_leaseFileDir = value3;
+	}
+	return _windowsInstallDir, _dhcpConfFileDir, _leaseFileDir
 }
 
 func DhcpConfigFiles() string {
-	return `C:\ProgramData\VMware\vmnetdhcp.conf`
+	return dhcpConfFileDir
 }
 
 func DhcpLeaseFiles() string {
-	return `C:\ProgramData\VMware\vmnetdhcp.leases`
+	return leaseFileDir
 }
 
 func SetUmask() {
@@ -63,5 +107,5 @@ func setVmwareCmd(cmd string) string {
 }
 
 func getShareDriveAndName() (string, string, string) {
-	return "Users", "C:\\Users", "/hosthome"
+	return config.DefaultShareName, config.DefaultSharePath, "/hosthome"
 }

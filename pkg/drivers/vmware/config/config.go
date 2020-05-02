@@ -26,27 +26,35 @@ import (
 )
 
 const (
-	defaultSSHUser  = "docker"
-	defaultSSHPass  = "tcuser"
-	defaultDiskSize = 20000
-	defaultCPU      = 1
-	defaultMemory   = 1024
+	defaultSSHUser     = "docker"
+	defaultSSHPass     = "tcuser"
+	DefaultSharePath   = "C:\\docker\\"
+	DefaultShareName   = "Users"
+	defaultDiskSize    = 20000
+	defaultCPU         = 1
+	defaultMemory      = 1024
+	defaultSSHPort     = 22
+	defaultDockerdPort = 2376
 )
 
 // Config specifies the configuration of driver VMware
 type Config struct {
 	*drivers.BaseDriver
 
-	Memory         int
-	DiskSize       int
-	CPU            int
-	ISO            string
-	Boot2DockerURL string
-
-	SSHPassword    string
-	ConfigDriveISO string
-	ConfigDriveURL string
-	NoShare        bool
+	Memory          int
+	DiskSize        int
+	CPU             int
+	SSH_PORT        int
+	DOCKERD_PORT    int
+	SharePath       string
+	ShareName		string
+	ISO             string
+	Boot2DockerURL  string
+	SSHPassword     string
+	ConfigDriveISO  string
+	ConfigDriveURL  string
+	BT2DDataStorage string
+	NoShare         bool
 }
 
 // NewConfig creates a new Config
@@ -55,7 +63,11 @@ func NewConfig(hostname, storePath string) *Config {
 		CPU:         defaultCPU,
 		Memory:      defaultMemory,
 		DiskSize:    defaultDiskSize,
+		SSH_PORT:    defaultSSHPort,
+		DOCKERD_PORT:defaultDockerdPort,
 		SSHPassword: defaultSSHPass,
+		SharePath:   DefaultSharePath,
+		ShareName:   DefaultShareName,
 		BaseDriver: &drivers.BaseDriver{
 			SSHUser:     defaultSSHUser,
 			MachineName: hostname,
@@ -98,6 +110,18 @@ func (c *Config) GetCreateFlags() []mcnflag.Flag {
 			Usage:  "size of disk for host VM (in MB)",
 			Value:  defaultDiskSize,
 		},
+		mcnflag.IntFlag{
+			EnvVar: "SSH_PORT",
+			Name:   "ssh-port",
+			Usage:  "port number of ssh",
+			Value:  defaultSSHPort,
+		},
+		mcnflag.IntFlag{
+			EnvVar: "DOCKERD_PORT",
+			Name:   "dockerd-port",
+			Usage:  "port number of dockerd",
+			Value:  defaultDockerdPort,
+		},
 		mcnflag.StringFlag{
 			EnvVar: "VMWARE_SSH_USER",
 			Name:   "vmware-ssh-user",
@@ -109,6 +133,24 @@ func (c *Config) GetCreateFlags() []mcnflag.Flag {
 			Name:   "vmware-ssh-password",
 			Usage:  "SSH password",
 			Value:  defaultSSHPass,
+		},
+		mcnflag.StringFlag{
+			EnvVar: "VMWARE_SHARE_PATH",
+			Name:   "vmware-share-path",
+			Usage:  "Share Path",
+			Value:  DefaultSharePath,
+		},
+		mcnflag.StringFlag{
+			EnvVar: "VMWARE_SHARE_NAME",
+			Name:   "vmware-share-name",
+			Usage:  "Share Name",
+			Value:  DefaultShareName,
+		},
+		mcnflag.StringFlag{
+			EnvVar: "VMWARE_BT2DDATASTORAGE",
+			Name:   "vmware-bt2d-data-storage",
+			Usage:  "vmdk Path for bt2d data storage",
+			Value:  "",
 		},
 		mcnflag.BoolFlag{
 			EnvVar: "VMWARE_NO_SHARE",

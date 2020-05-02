@@ -42,7 +42,7 @@ func RunSSHCommandFromDriver(d Driver, command string) (string, error) {
 	log.Debugf("About to run SSH command:\n%s", command)
 
 	output, err := client.Output(command)
-	log.Debugf("SSH cmd err, output: %v: %s", err, output)
+	log.Debugf("SSH cmd info, output: %v: %s", err, output)
 	if err != nil {
 		return "", fmt.Errorf(`ssh command error:
 command : %s

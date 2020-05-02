@@ -10,9 +10,11 @@ endif
 
 .PHONY: build
 build:
-	go build -o $(OUT_DIR)/$(PROG)$(BIN_SUFFIX) ./
+	go build -trimpath -mod=vendor -buildmode=exe -ldflags "-s -w -X main.goversion=1.14" -o $(OUT_DIR)/$(PROG)$(BIN_SUFFIX) ./
 
 .PHONY: dep
+clean:
+	go clean -ldflags "-s -w -X main.goversion=1.14"
 dep:
 	dep ensure
 

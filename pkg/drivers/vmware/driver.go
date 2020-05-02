@@ -31,6 +31,7 @@ import (
 	"regexp"
 	"runtime"
 	"strings"
+	"strconv"
 	"text/template"
 	"time"
 
@@ -71,6 +72,15 @@ func (d *Driver) GetSSHUsername() string {
 	return d.SSHUser
 }
 
+// GetSSHPort returns the ssh port, 22 if not specified
+func (d *Driver) GetSSHPort() (int, error) {
+	if d.SSHPort == 0 {
+		d.SSHPort = 22
+	}
+	return d.SSHPort, nil
+}
+
+
 // DriverName returns the name of the driver
 func (d *Driver) DriverName() string {
 	return "vmware"
@@ -80,6 +90,8 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.Memory = flags.Int("vmware-memory-size")
 	d.CPU = flags.Int("vmware-cpu-count")
 	d.DiskSize = flags.Int("vmware-disk-size")
+	d.SSHPort = flags.Int("ssh-port")
+	d.DOCKERD_PORT = flags.Int("dockerd-port")
 	d.Boot2DockerURL = flags.String("vmware-boot2docker-url")
 	d.ConfigDriveURL = flags.String("vmware-configdrive-url")
 	d.ISO = d.ResolveStorePath(isoFilename)
@@ -87,9 +99,11 @@ func (d *Driver) SetConfigFromFlags(flags drivers.DriverOptions) error {
 	d.SetSwarmConfigFromFlags(flags)
 	d.SSHUser = flags.String("vmware-ssh-user")
 	d.SSHPassword = flags.String("vmware-ssh-password")
-	d.SSHPort = 22
 	d.NoShare = flags.Bool("vmware-no-share")
-
+	d.SharePath = flags.String("vmware-share-path")
+	d.ShareName = flags.String("vmware-share-name")
+	d.BT2DDataStorage = flags.String("vmware-bt2d-data-storage")
+	
 	// We support a maximum of 16 cpu to be consistent with Virtual Hardware 10
 	// specs.
 	if d.CPU < 1 {
@@ -110,7 +124,7 @@ func (d *Driver) GetURL() (string, error) {
 	if ip == "" {
 		return "", nil
 	}
-	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, "2376")), nil
+	return fmt.Sprintf("tcp://%s", net.JoinHostPort(ip, strconv.Itoa(d.DOCKERD_PORT))), nil
 }
 
 func (d *Driver) GetIP() (ip string, err error) {
@@ -234,7 +248,7 @@ func (d *Driver) Start() error {
 
 		if ip != "" {
 			log.Debugf("Got an ip: %s", ip)
-			conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, 22), time.Duration(2*time.Second))
+			conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", ip, d.SSHPort), time.Duration(2*time.Second))
 			if err != nil {
 				log.Debugf("SSH Daemon not responding yet: %s", err)
 				time.Sleep(2 * time.Second)
@@ -310,7 +324,9 @@ func (d *Driver) Start() error {
 	// Enable Shared Folders
 	vmrun("-gu", d.SSHUser, "-gp", d.SSHPassword, "enableSharedFolders", d.vmxPath())
 
-	shareName, hostDir, shareDir := getShareDriveAndName()
+	_, _, shareDir := getShareDriveAndName()
+	hostDir := d.SharePath
+	shareName := d.ShareName
 	if hostDir != "" && !d.NoShare {
 		if _, err := os.Stat(hostDir); err != nil && !os.IsNotExist(err) {
 			return err
@@ -667,5 +683,5 @@ func executeSSHCommand(command string, d *Driver) error {
 func mountCommand(shareName, shareDir string) string {
 	// Replace C:\ to / due to Windows/Linux path difference
 	shareDir = strings.Replace(shareDir, "C:\\", "/", 1)
-	return "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; sudo mount --bind /mnt/hgfs/" + shareDir + " " + shareDir + " || [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs -o uid=$(id -u),gid=$(id -g) .host:/" + shareName + " " + shareDir
+	return "[ ! -d " + shareDir + " ]&& sudo mkdir " + shareDir + "; sudo mount --bind /mnt/hgfs/" + shareDir + " " + shareDir + " || [ -f /usr/local/bin/vmhgfs-fuse ]&& sudo /usr/local/bin/vmhgfs-fuse -o nonempty -o allow_other .host:/" + shareName + " " + shareDir + " || sudo mount -t vmhgfs -o nonempty  -o uid=$(id -u),gid=$(id -g) .host:/" + shareName + " " + shareDir
 }

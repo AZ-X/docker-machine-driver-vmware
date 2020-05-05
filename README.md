@@ -1,10 +1,14 @@
 # Docker Machine VMware Driver for Windows 7 and above
 
+First, please see [Things you must know before README](https://github.com/AZ-X/docker-machine-driver-vmware/issues/1).
+
+***If this project benefits you, please star it and keep watching***. 
+
 Create Docker machines locally on ~~VMware [Fusion](https://www.vmware.com/products/fusion)
 and~~ [Workstation](https://www.vmware.com/products/workstation).
 
 This driver requires VMware Workstation 15 Windows ~~or VMware Fusion 11 (MacOS)~~ to be installed on your host. Earlier versions of Workstation/Fusion might still work
-with this driver, but it's not officially supported.
+with this driver, but it's not officially supported. The assumable version of underlay kernel inside boot2docker changes to 5.4.
 
 >
 > Docker machine has a builtin driver called `vmwarefusion`. The main difference between

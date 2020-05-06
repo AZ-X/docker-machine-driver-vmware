@@ -29,3 +29,5 @@ jobs:
       uses: yakuhzi/action-release@v1
       with:
         file: out/docker-machine-driver-vmware.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}

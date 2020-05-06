@@ -24,6 +24,8 @@ The latest version of the `docker-machine-driver-vmware` binary is available on 
 [GithHub Releases](https://github.com/AZ-X/docker-machine-driver-vmware/releases) page.
 Download the the binary that corresponds to your OS into a directory residing in your PATH.
 
+
+
 ### From Source
 
 Make sure you have installed [Go](http://www.golang.org) and configured [GOPATH](http://golang.org/doc/code.html#GOPATH)
@@ -35,7 +37,7 @@ Run the following command:
 ```shell
 go get -u github.com/AZ-X/docker-machine-driver-vmware
 ```
-
+***There is no easy way to release a GitHub project. Finally I found one way go through among the [Action Marketplace](https://github.com/marketplace?type=actions). I call it fun place.***. 
 
 ## Usage
 

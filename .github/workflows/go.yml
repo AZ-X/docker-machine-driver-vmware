@@ -24,11 +24,12 @@ jobs:
 
     - name: Build
       run: make GOARCH=amd64 GOOS=windows
-
-    - name: Upload a Build Artifact
-      uses: actions/upload-artifact@v2
+      
+    - uses: actions/download-artifact@v2
       with:
-      # Artifact name
-      name: outs
-      # A file, directory or wildcard pattern that describes what to upload
-      path: ./out/
+        name: my-artifact
+        path: ./out/
+
+    - name: Display structure of downloaded files
+      run: ls -R
+      working-directory: ./out/

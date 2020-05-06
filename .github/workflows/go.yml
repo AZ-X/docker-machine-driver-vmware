@@ -24,13 +24,9 @@ jobs:
 
     - name: Build
       run: make GOARCH=amd64 GOOS=windows
-
-    - uses: actions/download-artifact@v2
-      name: download-artifact
+      
+    - uses: actions/upload-artifact@v2
       with:
-        path: ./
-    
-    - name: Display structure of downloaded files
-      run: ls -R
-      working-directory: /home/runner/work/docker-machine-driver-vmware/docker-machine-driver-vmware/
-    
+        name:  my-artifact
+        path:  ./out
+

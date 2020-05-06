@@ -28,7 +28,7 @@ jobs:
     - uses: actions/download-artifact@v2
       name: download-artifact
       with:
-        path: /home/runner/work/docker-machine-driver-vmware/docker-machine-driver-vmware/out/*
+        path: ./
     
     - name: Display structure of downloaded files
       run: ls -R

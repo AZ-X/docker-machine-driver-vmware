@@ -21,7 +21,10 @@ jobs:
 
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
+      
+    - name: List env
+      run: go env
     
     - name: Build
-      run: make GOARCH=amd64 GOOS=windows V=s
+      run: make GOARCH=amd64 GOOS=windows CGO_ENABLED=1 V=s
 

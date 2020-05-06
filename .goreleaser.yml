@@ -3,8 +3,6 @@ builds:
     binary: docker-machine-driver-vmware
     goos:
       - windows
-      - darwin
-      - linux
     goarch:
       - amd64
 archive:

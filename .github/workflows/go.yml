@@ -24,8 +24,12 @@ jobs:
 
     - name: Build
       run: make GOARCH=amd64 GOOS=windows
-      
-    - uses: ncipollo/release-action@v1
+
+    - name: Generate the artifacts
+      uses: skx/github-action-build@master
+    - name: Upload the artifacts
+      uses: skx/github-action-publish-binaries@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        artifacts: "out/docker-machine-driver-vmware.exe"
-        token: ${{ secrets.GITHUB_TOKEN }}
+        args: 'out/docker-machine-driver-vmware.exe'

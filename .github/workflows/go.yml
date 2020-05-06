@@ -25,9 +25,7 @@ jobs:
     - name: Build
       run: make GOARCH=amd64 GOOS=windows
       
-    - name: Upload release
-      uses: yakuhzi/action-release@v1
+    - uses: ncipollo/release-action@v1
       with:
-        file: out/docker-machine-driver-vmware.exe
-      env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        artifacts: "out/docker-machine-driver-vmware.exe"
+        token: ${{ secrets.GITHUB_TOKEN }}

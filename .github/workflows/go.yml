@@ -25,11 +25,7 @@ jobs:
     - name: Build
       run: make GOARCH=amd64 GOOS=windows
       
-    - uses: actions/download-artifact@v2
+    - name: Upload release
+      uses: yakuhzi/action-release@v1
       with:
-        name: my-artifact
-        path: ./out/
-
-    - name: Display structure of downloaded files
-      run: ls -R
-      working-directory: ./out/
+        file: out/docker-machine-driver-vmware.exe

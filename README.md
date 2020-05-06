@@ -21,7 +21,7 @@ with this driver, but it's not officially supported. The assumable version of un
 ### From a Release
 
 The latest version of the `docker-machine-driver-vmware` binary is available on the
-[GithHub Releases](https://github.com/machine-drivers/docker-machine-driver-vmware/releases) page.
+[GithHub Releases](https://github.com/AZ-X/docker-machine-driver-vmware/releases) page.
 Download the the binary that corresponds to your OS into a directory residing in your PATH.
 
 ### From Source
@@ -33,7 +33,7 @@ For Windows, make sure `%GOPATH%\bin` is included in `%PATH%`.
 Run the following command:
 
 ```shell
-go get -u github.com/machine-drivers/docker-machine-driver-vmware
+go get -u github.com/AZ-X/docker-machine-driver-vmware
 ```
 
 

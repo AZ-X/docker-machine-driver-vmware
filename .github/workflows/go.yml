@@ -24,8 +24,12 @@ jobs:
 
     - name: Build
       run: make GOARCH=amd64 GOOS=windows
-      
 
+    - uses: actions/download-artifact@v2
+      name: download-artifact
+      with:
+        path: /home/runner/work/docker-machine-driver-vmware/docker-machine-driver-vmware/out/docker-machine-driver-vmware.exe
+          
     - name: Upload to release
       uses: JasonEtco/upload-to-release@master
       with:

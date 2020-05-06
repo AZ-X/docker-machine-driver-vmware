@@ -30,15 +30,11 @@ jobs:
         name:  my-artifact
         path:  ./out
 
-    - name: Release
-      uses: docker://antonyurchenko/git-release:latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DRAFT_RELEASE: "false"
-        PRE_RELEASE: "false"
-        ALLOW_EMPTY_CHANGELOG: "true"
-        CHANGELOG_FILE:  README.md
+    - uses: "marvinpinto/action-automatic-releases@latest"
       with:
-        args: |
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag	: latest 
+          prerelease: false
+          files: |
             ./out/docker-machine-driver-vmware.exe
 

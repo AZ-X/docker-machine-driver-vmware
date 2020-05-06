@@ -37,7 +37,7 @@ Run the following command:
 ```shell
 go get -u github.com/AZ-X/docker-machine-driver-vmware
 ```
-***There is no easy way to release a GitHub project. Finally I found one way go through among the [Action Marketplace](https://github.com/marketplace?type=actions). I call it fun place.***. 
+***There is no easy way to release a GitHub project. Finally I found one way go through among the Actions Suggestions from [Marketplace](https://github.com/marketplace?type=actions). I call it fun place***.
 
 ## Usage
 
